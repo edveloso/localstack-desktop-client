@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import Card from "@/components/Card";
 import {
   getS3Client,
@@ -63,9 +64,11 @@ const Services = () => {
       try {
         const cwClient = getCloudWatchClient();
         const logsData = await cwClient.send(new DescribeLogGroupsCommand({}));
+        const logGroups = logsData.logGroups?.map((lg) => lg.logGroupName!) || [];
+
         setServices((prev) => ({
           ...prev,
-          logs: logsData.logGroups?.map((lg) => lg.logGroupName!) || [],
+          logs: logGroups,
         }));
       } catch (error) {
         console.error("Erro ao listar grupos de log:", error);
@@ -75,6 +78,20 @@ const Services = () => {
     fetchServices();
   }, []);
 
+  const renderLogGroupLinks = (logs: string[]) => {
+    return (
+      <ul className="list-disc list-inside space-y-1">
+        {logs.map((logGroup) => (
+          <li key={logGroup}>
+            <Link href={`/logs/${encodeURIComponent(logGroup)}`} className="text-blue-600 hover:underline">
+              {logGroup}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-6">Serviços LocalStack</h1>
@@ -82,7 +99,12 @@ const Services = () => {
         <Card title="S3 Buckets" items={services.s3} emptyMessage="Nenhum bucket encontrado." />
         <Card title="DynamoDB Tables" items={services.dynamodb} emptyMessage="Nenhuma tabela encontrada." />
         <Card title="Lambda Functions" items={services.lambda} emptyMessage="Nenhuma função encontrada." />
-        <Card title="CloudWatch Log Groups" items={services.logs} emptyMessage="Nenhum grupo de log encontrado." />
+        <Card
+          title="CloudWatch Log Groups"
+          items={[]}
+          customContent={services.logs.length > 0 ? renderLogGroupLinks(services.logs) : null}
+          emptyMessage="Nenhum grupo de log encontrado."
+        />
       </div>
     </div>
   );
