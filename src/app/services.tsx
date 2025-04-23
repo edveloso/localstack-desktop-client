@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Card from "@/components/Card";
@@ -92,11 +93,30 @@ const Services = () => {
     );
   };
 
+  const renderBucketLinks = (buckets: string[]) => {
+    return (
+      <ul className="list-disc list-inside space-y-1">
+        {buckets.map((bucket) => (
+          <li key={bucket}>
+            <Link href={`/buckets/${encodeURIComponent(bucket)}`} className="text-blue-600 hover:underline">
+              {bucket}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-6">Serviços LocalStack</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card title="S3 Buckets" items={services.s3} emptyMessage="Nenhum bucket encontrado." />
+        <Card
+          title="S3 Buckets"
+          items={[]}
+          customContent={services.s3.length > 0 ? renderBucketLinks(services.s3) : null}
+          emptyMessage="Nenhum bucket encontrado."
+        />
         <Card title="DynamoDB Tables" items={services.dynamodb} emptyMessage="Nenhuma tabela encontrada." />
         <Card title="Lambda Functions" items={services.lambda} emptyMessage="Nenhuma função encontrada." />
         <Card

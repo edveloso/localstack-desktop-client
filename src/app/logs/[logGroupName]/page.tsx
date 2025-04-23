@@ -8,10 +8,15 @@ import {
   GetLogEventsCommand,
 } from "@aws-sdk/client-cloudwatch-logs";
 
+interface LogEvent {
+  message: string;
+  timestamp: number;
+}
+
 const LogGroupDetailPage = () => {
   const params = useParams();
   const logGroupName = decodeURIComponent(params.logGroupName as string);
-  const [events, setEvents] = useState<string[]>([]);
+  const [events, setEvents] = useState<LogEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -42,12 +47,16 @@ const LogGroupDetailPage = () => {
           })
         );
 
-        const logMessages =
-          eventsData.events?.map((e) => e.message || "Sem mensagem") || [];
-        setEvents(logMessages);
+        const logEvents: LogEvent[] =
+          eventsData.events?.map((e) => ({
+            message: e.message || "Sem mensagem",
+            timestamp: e.timestamp || 0,
+          })) || [];
+
+        setEvents(logEvents);
       } catch (err) {
         console.error("Erro ao buscar eventos de log:", err);
-        setEvents(["Erro ao carregar eventos."]);
+        setEvents([{ message: "Erro ao carregar eventos.", timestamp: 0 }]);
       } finally {
         setLoading(false);
       }
@@ -55,6 +64,10 @@ const LogGroupDetailPage = () => {
 
     fetchLogEvents();
   }, [logGroupName]);
+
+  const formatDate = (timestamp: number) => {
+    return new Date(timestamp).toLocaleString();
+  };
 
   return (
     <div className="p-4">
@@ -70,7 +83,8 @@ const LogGroupDetailPage = () => {
               key={idx}
               className="bg-zinc-100 dark:bg-zinc-700 p-2 rounded-md"
             >
-              {event}
+              <p className="text-xs text-zinc-500 mb-1">{formatDate(event.timestamp)}</p>
+              <p>{event.message}</p>
             </li>
           ))}
         </ul>
