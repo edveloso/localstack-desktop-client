@@ -5,10 +5,11 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { LambdaClient } from "@aws-sdk/client-lambda";
 import { localstackConfig } from "./client";
 import { CloudWatchLogsClient } from "@aws-sdk/client-cloudwatch-logs";
-
+import { SQSClient } from "@aws-sdk/client-sqs";
 
 export const getS3Client = () => new S3Client(localstackConfig);
 export const getDynamoDBClient = () => new DynamoDBClient(localstackConfig);
 export const getLambdaClient = () => new LambdaClient(localstackConfig);
 export const getCloudWatchClient = () => new CloudWatchLogsClient(localstackConfig);
+export const getSQSClient = () => new SQSClient(localstackConfig);
 
