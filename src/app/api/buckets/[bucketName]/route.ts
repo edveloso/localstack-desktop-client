@@ -1,9 +1,18 @@
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { NextRequest } from "next/server";
 
+
+const isRunningInDocker = process.env.DOCKER === "true";
+
+// Define endpoint de acordo com ambiente
+const endpoint = isRunningInDocker
+  ? "http://host.docker.internal:4566" // Docker acessando o host local
+  : "http://localhost:4566";           // Desenvolvimento local
+
+
 const s3 = new S3Client({
   region: "us-east-1",
-  endpoint: "http://localhost:4566",
+  endpoint,
   forcePathStyle: true,
   credentials: {
     accessKeyId: "test",

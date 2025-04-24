@@ -33,8 +33,6 @@ ENV AWS_SECRET_ACCESS_KEY=test
 ENV AWS_ENDPOINT=http://host.docker.internal:4566
 ENV DOCKER=true
 
-# Expõe a porta padrão do Next.js
-EXPOSE 3000
-
-# Comando de inicialização
+ENV PORT=3030
+EXPOSE 3030
 CMD ["npm", "start"]
