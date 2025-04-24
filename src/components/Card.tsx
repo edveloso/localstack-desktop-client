@@ -9,26 +9,26 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ title, items, emptyMessage, customContent }) => {
   return (
-    <div className="bg-white dark:bg-zinc-800 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out break-words overflow-wrap break-word">
-      <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
-        {title}
-      </h2>
+    <div className="bg-white dark:bg-zinc-800 p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out break-words">
+      <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">{title}</h2>
       {customContent ? (
         <div className="whitespace-pre-wrap break-words text-sm text-gray-700 dark:text-gray-300">
           {customContent}
         </div>
       ) : (
-        <ul className="list-disc list-inside space-y-2 text-sm text-gray-700 dark:text-gray-300 break-words">
+        <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
           {items.length > 0 ? (
             items.map((item, idx) => (
-              <li key={idx} className="whitespace-pre-wrap break-words">
+              <div key={idx} className="whitespace-pre-wrap break-words">
                 {item}
-              </li>
+              </div>
             ))
           ) : (
-            <li className="italic text-gray-400">{emptyMessage || "Nenhum item encontrado."}</li>
+            <div className="italic text-gray-400">
+              {emptyMessage || "Nenhum item encontrado."}
+            </div>
           )}
-        </ul>
+        </div>
       )}
     </div>
   );
