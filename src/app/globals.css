@@ -27,6 +27,52 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
+.main-container {
+  width: 80%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem;
+}
+
+.service-card {
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  word-wrap: break-word;         /* Quebra palavras longas */
+  overflow-wrap: break-word;     /* Quebra palavras longas */
+  white-space: normal;           /* Permite múltiplas linhas */
+}
+
+.service-card h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+}
+
+.service-card ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.service-card li {
+  margin: 4px 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.service-card pre,
+.service-card code {
+  white-space: pre-wrap;     /* quebra a linha automaticamente */
+  word-break: break-word;    /* quebra palavras longas */
+  font-family: monospace;
+  background-color: #f3f3f3;
+  padding: 8px;
+  border-radius: 4px;
+  display: block;
+}
+
+
 * {
   box-sizing: border-box;
   padding: 0;
