@@ -11,11 +11,15 @@ const s3 = new S3Client({
   },
 });
 
+type Params = Promise<{ bucketName: string }>;
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { bucketName: string } }
+  context : { params:  Params  }
 ) {
-  const { bucketName } = await params;
+  // const { bucketName } = await params;
+  const queryParam =  context.params;
+  const { bucketName } = await queryParam;
 
   try {
     const command = new ListObjectsV2Command({ Bucket: bucketName });
