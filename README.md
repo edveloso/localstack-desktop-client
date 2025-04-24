@@ -35,7 +35,11 @@ Este é um portal de gerenciamento para serviços da AWS em execução no LocalS
    pnpm install
    ```
 
-3. Certifique-se de que o LocalStack está em execução na porta padrão (`http://localhost:4566`).
+3. Certifique-se de que o LocalStack está em execução na porta padrão (`http://localhost:4566`) com a configuração de CORS desabilitada:
+
+   ```bash
+   LOCALSTACK_DISABLE_CORS_CHECKS=1 localstack start -d
+   ```
 
 4. Configure o arquivo `src/lib/aws/client.ts` para apontar para o endpoint do LocalStack, se necessário.
 
