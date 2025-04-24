@@ -13,9 +13,8 @@ const s3 = new S3Client({
 
 export async function GET(
   req: NextRequest,
-  contextPromise: Promise<{ params: { bucketName: string } }>
+  { params }: { params: { bucketName: string } }
 ) {
-  const { params } = await contextPromise;
   const { bucketName } = await params;
 
   try {
