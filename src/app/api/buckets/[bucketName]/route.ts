@@ -1,4 +1,3 @@
-// src/app/api/buckets/[bucketName]/route.ts
 import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { NextRequest } from "next/server";
 
@@ -14,9 +13,10 @@ const s3 = new S3Client({
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { bucketName: string } }
+  contextPromise: Promise<{ params: { bucketName: string } }>
 ) {
-  const bucketName = decodeURIComponent(params.bucketName);
+  const { params } = await contextPromise;
+  const { bucketName } = await params;
 
   try {
     const command = new ListObjectsV2Command({ Bucket: bucketName });
@@ -24,7 +24,7 @@ export async function GET(
     return Response.json({ objects: data.Contents || [] });
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: "Erro ao acessar bucket", details: error }),
+      JSON.stringify({ error: "Erro ao acessar bucket", details: String(error) }),
       { status: 500 }
     );
   }
