@@ -8,11 +8,13 @@ import {
   getDynamoDBClient,
   getLambdaClient,
   getCloudWatchClient,
+  getSQSClient,
 } from "@/lib/aws/config";
 import { ListBucketsCommand } from "@aws-sdk/client-s3";
 import { ListTablesCommand } from "@aws-sdk/client-dynamodb";
 import { ListFunctionsCommand } from "@aws-sdk/client-lambda";
 import { DescribeLogGroupsCommand } from "@aws-sdk/client-cloudwatch-logs";
+import { ListQueuesCommand } from "@aws-sdk/client-sqs";
 
 const Services = () => {
   const [services, setServices] = useState<{
@@ -20,11 +22,13 @@ const Services = () => {
     dynamodb: string[];
     lambda: string[];
     logs: string[];
+    sqs: string[];
   }>({
     s3: [],
     dynamodb: [],
     lambda: [],
     logs: [],
+    sqs: [],
   });
 
   useEffect(() => {
@@ -74,6 +78,21 @@ const Services = () => {
       } catch (error) {
         console.error("Erro ao listar grupos de log:", error);
       }
+
+      try {
+        const res = await fetch("/api/queues");
+        if (!res.ok) throw new Error("Erro ao buscar filas");
+        const data = await res.json();
+        const queueUrls = data.queues;
+
+
+        setServices((prev) => ({
+          ...prev,
+          sqs: queueUrls,
+        }));
+      } catch (error) {
+        console.error("Erro ao listar filas SQS:", error);
+      }
     };
 
     fetchServices();
@@ -107,6 +126,20 @@ const Services = () => {
     );
   };
 
+  const renderQueueLinks = (queues: string[]) => {
+    return (
+      <ul className="list-disc list-inside space-y-2">
+        {queues.map((queueUrl) => (
+          <li key={queueUrl}>
+            <Link href={`/sqs/${encodeURIComponent(queueUrl)}`} className="text-blue-600 hover:underline">
+              {queueUrl}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">Serviços LocalStack</h1>
@@ -124,6 +157,12 @@ const Services = () => {
           items={[]}
           customContent={services.logs.length > 0 ? renderLogGroupLinks(services.logs) : null}
           emptyMessage="Nenhum grupo de log encontrado."
+        />
+        <Card
+          title="SQS Queues"
+          items={[]}
+          customContent={services.sqs.length > 0 ? renderQueueLinks(services.sqs) : null}
+          emptyMessage="Nenhuma fila encontrada."
         />
       </div>
     </div>
