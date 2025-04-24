@@ -108,9 +108,11 @@ const Services = () => {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-6">Serviços LocalStack</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="p-8 bg-zinc-50 dark:bg-zinc-950 min-h-screen">
+      <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-8">
+        Serviços LocalStack
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card
           title="S3 Buckets"
           items={[]}
